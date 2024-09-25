@@ -17,6 +17,8 @@ public class Level1 extends Level
     {
         // initialise instance variables
         setBackground("img/RacingBackground.png");
+        Car driver = new Car();
+        addObject(driver, driver.getLane() * 70 - 60, 700);
     }
 
     
