@@ -13,7 +13,7 @@ public class MyMayflower extends Mayflower
     public MyMayflower()
     {
         
-        super("CS Project1", 600, 1067);
+        super("CS Project1", 500, 888);
     }
 
     public void init()

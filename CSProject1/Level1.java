@@ -9,8 +9,9 @@ import java.lang.Math.*;
 public class Level1 extends Level
 {
     // instance variables - replace the example below with your own
-    private int x;
-    public Object[][] objects;
+    Car driver;
+    private Timer scoreTimer;
+    private int timesMultiplier;
     /**
      * Constructor for objects of class Level1
      */
@@ -18,43 +19,56 @@ public class Level1 extends Level
     {
         // initialise instance variables
         
+        
         setBackground("img/RacingBackground.png");
-        Car driver = new Car();
-        addObject(driver, (driver.getLane() - 1) * 97 + 11, 700);
+        driver = new Car();
+        addObject(driver, (driver.getLane() - 1) * 82 + 98, 651);
         
-        showText("Lane = " + driver.getLane(), 10, 30, Color.BLACK);
+
         
-        objects = new Object[32][4];
+        buildRaceWorld(2, .15, .07, .02, .15, .02);
         
-        for (int r = 0; r < objects.length; r++) {
-            for (int c = 0; c < objects[r].length; c++) {
-                double rng = Math.random();
-                
-                if (rng < 0.15) {
-                    objects[r][c] = new ObstacleCar();
-                }
-                else if (rng < 0.2) {
-                    objects[r][c] = new Multiplier();
-                }
-                else if (rng < 0.22){
-                    objects[r][c]= new SpeedBoost();
-                }
-                else if (rng < 0.25){
-                    objects[r][c] = new Extraneous();
-                }
-                else if (rng < 0.27) {
-                    objects[r][c] = new Gas();
-                }
-            }
-        }
+        scoreTimer = new Timer(900000000);
+        timesMultiplier = 9000000;
+    
         
         
     }
-
     
+    public int getSpeed() {
+        return super.getRaceSpeed();
+    }
+    
+    public void isMultiplier(){
+        if(driver.isTouchingMultiplier()) {
+            timesMultiplier = 0;
+        }
+    }
+
     
     public void act()
     {
+       showText("Score: " + score, 10, 30);
+        
+       showText("Gas: " + driver.getGas(), 250, 855);
+       
+       if(scoreTimer.isDone()) {
+           int increaseScoreBy;
+        if(timesMultiplier < 9) {
+           increaseScoreBy = 10 * getSpeed() * 2;
+           score += increaseScoreBy;
+            timesMultiplier ++;
+            System.out.println(timesMultiplier);
+        }
+        else {
+        increaseScoreBy = 10 * getSpeed();
+       score += increaseScoreBy;
+    }
+    scoreTimer.reset();
+}
+
+    isMultiplier();
+       
        
     }
 }
