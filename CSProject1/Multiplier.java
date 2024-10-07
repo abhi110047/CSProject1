@@ -32,6 +32,13 @@ public class Multiplier extends Object
             updateSpeed(-1);
        }
        
+       if(isTouching(Car.class)){
+           Timer j = new Timer(1000);
+           if (j.isDone()){
+           World w = getWorld();
+           w.removeObject(this);
+        }
+       }
        
        
     }

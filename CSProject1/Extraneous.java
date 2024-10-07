@@ -41,6 +41,7 @@ public class Extraneous extends Object
        if (Mayflower.isKeyDown(Keyboard.KEY_DOWN) && getSpeed() > 0){
             updateSpeed(-1);
        }
+       
     }
        
 }

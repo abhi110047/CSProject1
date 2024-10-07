@@ -12,11 +12,13 @@ public class Car extends Actor
     private int x;
     private int lane;
     public int gas;
+    public int mph;
     public Timer c;
     public int multiplierIncrease;
     private Animation animation;
     private boolean goingLeft = false;
     private int rightFrameNumber = 1;
+    public Timer animationTimer;
     
     
 
@@ -37,12 +39,22 @@ public class Car extends Actor
         lane = 1;
         c = new Timer(250000000);
         gas = 100;
+        mph = 60;
+        
+        animationTimer = new Timer(100000);
     }
-
+    
+    public void move(int dx, int dy) {
+        this.x += dx;
+    }
+    
     public int getGas(){
         return gas;
     }
     
+    public int getMPH() {
+        return mph;
+    }
     
     public int getLane() {
         
@@ -55,7 +67,10 @@ public class Car extends Actor
     }
     
     public boolean isTouchingMultiplier(){
-        if(isTouching(Multiplier.class)) {
+        if(isTouching(Multiplier.class)){
+            Multiplier mulObject = (Multiplier) getOneIntersectingObject(Multiplier.class);
+            World w = getWorld();
+            w.removeObject(mulObject);
             return true;
         }
         return false;
@@ -68,7 +83,6 @@ public class Car extends Actor
                 MayflowerImage image = new MayflowerImage("rightTurnA/RightTurn" + i + ".png");
                 
                 if(x.isDone()){
-                   image.scale(0.5);
                    setImage(image); 
                 }
                 
@@ -84,7 +98,6 @@ public class Car extends Actor
                 Timer y = new Timer(1000);
                 MayflowerImage image = new MayflowerImage("rightTurnA/RightTurn" + i + ".png");
                 if(y.isDone()){
-                   image.scale(0.5);
                    setImage(image); 
                 }
                 
@@ -92,30 +105,68 @@ public class Car extends Actor
                 
             
             }
+
+    }
+    
+    public void setGas(int amount){
+        gas = amount;
+    }
+    
+    public void moveRight2() {
+        
+        while (rightFrameNumber < 8) {
+            setImage("rightTurnA/RightTurn" + rightFrameNumber + ".png");
+            rightFrameNumber++;
+        }
+        
+        lane+=1;
+        setLocation((getLane() - 1) * 82 + 98, 651);
+        
+        while (rightFrameNumber < 14) {
+            
+            MayflowerImage temp = new MayflowerImage("rightTurnA/RightTurn" + rightFrameNumber + ".png");
+            temp.scale(0.5);
+            setImage(temp);
+            rightFrameNumber++;
+        }
+        
+        rightFrameNumber = 1;
+        
+        if (animationTimer.isDone()){
+                 animationTimer.reset();
+                 animationTimer.set(60);
+        }
     }
     
     public void act(){
         
         if (Mayflower.isKeyPressed(Keyboard.KEY_RIGHT) && lane < 4){
             
-            moveRight();
+            setImage("rightTurnA/RightTurn5.png");
             
+            int i = 0;
             
+            while (i < 82) {
+                move(1);
+                i++;
+            }
             
-            
-            
+            lane+=1;
+            setLocation((getLane() - 1) * 82 + 98, 651);
+            setImage("img/car.png");
+             
+             
+ 
         }
         if (Mayflower.isKeyPressed(Keyboard.KEY_LEFT) && lane > 1){
             lane-=1;
             setLocation((getLane() - 1) * 82 + 98, 651);
             
-        }
-          
+        }          
         
         if (isTouching(ObstacleCar.class) || isTouching(Extraneous.class)){
             Mayflower.setWorld(new Lose());
         }
-        
         
         if(c.isDone()){
             gas -= 1;
@@ -126,11 +177,20 @@ public class Car extends Actor
             Mayflower.setWorld(new Lose());
         }
         
-        if (isTouching(Gas.class)){
+        if(isTouching(Gas.class)){
             gas = 100;
+            Gas gasObject = (Gas) getOneIntersectingObject(Gas.class);
+            World w = getWorld();
+            w.removeObject(gasObject);
         }
         
         
+        if (Mayflower.isKeyDown(Keyboard.KEY_UP) && (mph < 150)) {
+            mph *= 1.02;
+        }
         
+        if (Mayflower.isKeyDown(Keyboard.KEY_DOWN) && (mph > 1)) {
+            mph *= 0.9;
+        }
         }
     }

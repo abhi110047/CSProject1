@@ -25,6 +25,11 @@ public class SpeedBoost extends Object
        
        if(isTouching(Car.class)){
            setSpeed(5);
+           Timer j = new Timer(1000);
+           if (j.isDone()){
+           World w = getWorld();
+           w.removeObject(this);
+        }
        }
     }
 }

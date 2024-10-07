@@ -12,6 +12,8 @@ public class Level1 extends Level
     Car driver;
     private Timer scoreTimer;
     private int timesMultiplier;
+    private Timer completionTimer;
+    
     /**
      * Constructor for objects of class Level1
      */
@@ -26,10 +28,11 @@ public class Level1 extends Level
         
 
         
-        buildRaceWorld(2, .15, .07, .02, .15, .02);
+        buildRaceWorld(2, .15, .07, .02, .15, .12);
         
         scoreTimer = new Timer(900000000);
         timesMultiplier = 9000000;
+        completionTimer = new Timer(10^7);
     
         
         
@@ -52,8 +55,10 @@ public class Level1 extends Level
         
        showText("Gas: " + driver.getGas(), 250, 855);
        
-       if(scoreTimer.isDone()) {
-           int increaseScoreBy;
+       showText("MPH: " + driver.getMPH(), 0, 855);
+
+    if(scoreTimer.isDone()) {
+        int increaseScoreBy;
         if(timesMultiplier < 9) {
            increaseScoreBy = 10 * getSpeed() * 2;
            score += increaseScoreBy;
@@ -64,11 +69,15 @@ public class Level1 extends Level
         increaseScoreBy = 10 * getSpeed();
        score += increaseScoreBy;
     }
-    scoreTimer.reset();
-}
+        scoreTimer.reset();
+    }
 
     isMultiplier();
-       
+    
+    
+    if (score > 1000){
+        Mayflower.setWorld(new Level2());
+    }
        
     }
 }

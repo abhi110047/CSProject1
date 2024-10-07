@@ -9,6 +9,11 @@ import java.lang.Math.*;
 public class Level2 extends Level
 {
     // instance variables - replace the example below with your own
+    Car driver;
+    private Timer scoreTimer;
+    private int timesMultiplier;
+    private Timer completionTimer;
+    
     /**
      * Constructor for objects of class Level1
      */
@@ -16,23 +21,64 @@ public class Level2 extends Level
     {
         // initialise instance variables
         
+        score = 1000;
         
         setBackground("img/Level2.png");
-        Car driver = new Car();
+        driver = new Car();
         addObject(driver, (driver.getLane() - 1) * 82 + 98, 651);
         
 
         
-        buildRaceWorld(2, .25, .17, .12, .25, .12);
+        buildRaceWorld(2, .12, .17, .12, .25, .22);
+        
+        scoreTimer = new Timer(900000000);
+        timesMultiplier = 9000000;
+        completionTimer = new Timer(10^7);
     
         
         
-        
+    }
+    
+    public int getSpeed() {
+        return super.getRaceSpeed();
+    }
+    
+    public void isMultiplier(){
+        if(driver.isTouchingMultiplier()) {
+            timesMultiplier = 0;
+        }
     }
 
     
     public void act()
     {
+       showText("Score: " + score, 10, 30);
+        
+       showText("Gas: " + driver.getGas(), 250, 855);
+       
+       showText("MPH: " + driver.getMPH(), 0, 855);
+
+    if(scoreTimer.isDone()) {
+        int increaseScoreBy;
+        if(timesMultiplier < 9) {
+           increaseScoreBy = 10 * getSpeed() * 2;
+           score += increaseScoreBy;
+            timesMultiplier ++;
+            System.out.println(timesMultiplier);
+        }
+        else {
+        increaseScoreBy = 10 * getSpeed();
+       score += increaseScoreBy;
+    }
+        scoreTimer.reset();
+    }
+
+    isMultiplier();
+    
+    
+    if (score > 2000){
+        Mayflower.setWorld(new Level3());
+    }
        
     }
 }
